@@ -14,7 +14,7 @@ on:
 env:
   GH_USERNAME: "tlienart"
   REPO_PREFIX: "xranklin-build-tester"
-  PREVIEWS_PREFIX: "previews/PR"  # followed by PR number
+  PREVIEWS_PREFIX: "previews/PR"  # will be followed by PR number
 
 jobs:
   build:
