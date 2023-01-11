@@ -4,6 +4,7 @@ env:
   GH_USERNAME: "tlienart"
   REPO_PREFIX: "xranklin-build-tester"
   PREVIEWS_PREFIX: "previews/PR"  # followed by PR number
+  BUILD_ACTION_REF: "dev"
 
 on:
   push:
@@ -30,7 +31,7 @@ jobs:
         shell: bash
 
       - name: BUILD AND DEPLOY
-        uses: tlienart/xranklin-build-action@main
+        uses: tlienart/xranklin-build-action@${{env.BUILD_ACTION_REF}}
         with:
           BASE_URL_PREFIX: ${{ env.REPO_PREFIX }}
           PREVIEW: ${{ env.PRID }}
