@@ -1,0 +1,44 @@
+name: deploy
+
+env:
+  GH_USERNAME: "tlienart"
+  REPO_PREFIX: "xranklin-build-tester"
+  PREVIEWS_PREFIX: "previews/PR"  # followed by PR number
+
+on:
+  push:
+    branches:
+      - main
+    pull_request:
+      types: [opened, synchronize]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: SET PREVIEW PATH IF PULL REQUEST
+        run: |
+          if ${{ github.event_name == 'pull_request' }}
+          then
+            echo 'PRID=${{ env.PREVIEWS_PREFIX}}${{ github.event.number}}' >> $GITHUB_ENV
+          else
+            echo 'PRID=' >> $GITHUB_ENV
+          fi
+        shell: bash
+
+      - name: BUILD AND DEPLOY
+        uses: tlienart/xranklin-build-action@main
+        with:
+          BASE_URL_PREFIX: ${{ env.REPO_PREFIX }}
+          PREVIEW: ${{ env.PRID }}
+          UPLOAD_ARTIFACTS: true
+
+      - name: URL INDICATION
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            Preview should be up in a couple of mins at https://${{ env.GH_USERNAME }}.github.io/${{ env.REPO_PREFIX }}/${{ env.PRID }} (if you get a 404, wait 30s then refresh).
+        if: github.event_name == 'pull_request'
