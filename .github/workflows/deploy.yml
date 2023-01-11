@@ -1,9 +1,12 @@
-# NOTE: uses `@dev` version of build action
-# users should at the very least switch this to `@main` or, ideally
-# to a tagged version that works for them.
+# NOTES:
+#   - if your default branch is `master`, replace `main` by `master` in the "on" part.
+#   - the `REPO_PREFIX` is the name of the repo; if the repo is USERNAME.github.io then leave empty.
+#   - the `PREVIEWS_PREFIX` will be followed by the PR number so e.g. PR123 will go to `/previews/PR123/`
+#   - this uses `@dev` version of the build action (see build and deploy step).
+#       Users should use a tagged version or at least `@main` to avoid issues.
+#
 
-name: deploy
-
+name: Build and Deploy
 on:
   push:
     branches:
@@ -16,7 +19,7 @@ on:
 env:
   GH_USERNAME: "tlienart"
   REPO_PREFIX: "xranklin-build-tester"
-  PREVIEWS_PREFIX: "previews/PR"  # will be followed by PR number
+  PREVIEWS_PREFIX: "previews/PR"
 
 jobs:
   build:
@@ -25,24 +28,19 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: SET PREVIEW PATH IF PULL REQUEST
+      - name: 👀 Set preview path for PRs
         run: |
-          if ${{ github.event_name == 'pull_request' }}
-          then
-            echo 'PRID=${{ env.PREVIEWS_PREFIX}}${{ github.event.number}}' >> $GITHUB_ENV
-          else
-            echo 'PRID=' >> $GITHUB_ENV
-          fi
+          echo 'PRID=${{ env.PREVIEWS_PREFIX}}${{ github.event.number}}' >> $GITHUB_ENV
+        if: github.event_name == 'pull_request'
         shell: bash
 
-      - name: BUILD AND DEPLOY
+      - name: 🚀 Build and Deploy
         uses: tlienart/xranklin-build-action@dev
         with:
           BASE_URL_PREFIX: ${{ env.REPO_PREFIX }}
           PREVIEW: ${{ env.PRID }}
-          UPLOAD_ARTIFACTS: true
 
-      - name: URL INDICATION
+      - name: 🗒️ Preview URL indication for PRs
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
