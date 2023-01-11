@@ -1,3 +1,7 @@
+# NOTE: uses `@dev` version of build action
+# users should at the very least switch this to `@main` or, ideally
+# to a tagged version that works for them.
+
 name: deploy
 
 on:
@@ -11,7 +15,6 @@ env:
   GH_USERNAME: "tlienart"
   REPO_PREFIX: "xranklin-build-tester"
   PREVIEWS_PREFIX: "previews/PR"  # followed by PR number
-  BUILD_ACTION_REF: "tlienart/xranklin-build-action@dev"
 
 jobs:
   build:
@@ -31,7 +34,7 @@ jobs:
         shell: bash
 
       - name: BUILD AND DEPLOY
-        uses: ${{env.BUILD_ACTION_REF}}
+        uses: tlienart/xranklin-build-action@dev
         with:
           BASE_URL_PREFIX: ${{ env.REPO_PREFIX }}
           PREVIEW: ${{ env.PRID }}
