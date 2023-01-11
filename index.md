@@ -2,4 +2,4 @@
 
 {{hello}}
 
-Another sentence
+Another sentence. And another.
