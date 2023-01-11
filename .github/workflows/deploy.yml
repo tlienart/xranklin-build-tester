@@ -1,17 +1,17 @@
 name: deploy
 
-env:
-  GH_USERNAME: "tlienart"
-  REPO_PREFIX: "xranklin-build-tester"
-  PREVIEWS_PREFIX: "previews/PR"  # followed by PR number
-  BUILD_ACTION_REF: "dev"
-
 on:
   push:
     branches:
       - main
     pull_request:
       types: [opened, synchronize]
+
+env:
+  GH_USERNAME: "tlienart"
+  REPO_PREFIX: "xranklin-build-tester"
+  PREVIEWS_PREFIX: "previews/PR"  # followed by PR number
+  BUILD_ACTION_REF: "dev"
 
 jobs:
   build:
